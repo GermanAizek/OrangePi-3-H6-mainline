@@ -3,7 +3,7 @@
 	url = https://github.com/Icenowy/aw-el2-barebone
 [submodule "arm-trusted-firmware"]
 	path = arm-trusted-firmware
-	url = https://github.com/ARM-software/arm-trusted-firmware.git
+	url = https://github.com/GermanAizek/arm-trusted-firmware.git
 [submodule "u-boot-2022.10"]
 	path = u-boot-2022.10
 	url = https://github.com/u-boot/u-boot.git
