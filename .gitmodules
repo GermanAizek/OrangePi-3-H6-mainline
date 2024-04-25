@@ -1,6 +1,6 @@
 [submodule "aw-el2-barebone"]
 	path = aw-el2-barebone
-	url = https://github.com/Icenowy/aw-el2-barebone
+	url = https://github.com/GermanAizek/aw-el2-barebone
 [submodule "arm-trusted-firmware"]
 	path = arm-trusted-firmware
 	url = https://github.com/GermanAizek/arm-trusted-firmware.git
