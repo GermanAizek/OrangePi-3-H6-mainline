@@ -42,8 +42,17 @@ First copy to the u-boot directory the files `bl31.bin` from arm-trusted-firmwar
 cp arm-trusted-firmware/build/sun50i_h6/release/bl31.bin u-boot-el1-hyp-emmc/bl31.bin
 cp aw-el2-barebone/el2-bb.bin u-boot-el1-hyp-emmc/hyp.bin
 cp configs/u-boot-el1-hyp-config u-boot-el1-hyp-emmc/.config
-make -j8 ARCH=arm CROSS_COMPILE=aarch64-linux-gnu-
+make -j8 CROSS_COMPILE=aarch64-linux-gnu-
+```
+
+```bash
 dd if=u-boot-sunxi-with-spl.bin of=/dev/sdX bs=1024 seek=8
+```
+
+or SD card adapter on laptop
+
+```bash
+dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblkX bs=1024 seek=8
 ```
 
 #### linux-5.7.4
