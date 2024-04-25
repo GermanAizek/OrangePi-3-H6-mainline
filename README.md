@@ -17,11 +17,11 @@ Mainline kernel Orange Pi 3 (Allwinner H6) with USB3, WiFi, Ethernet, PCI-E patc
 ### Instructions
 
 #### Build environment
-* Ubuntu Linux 18.04.6 LTS
+* Debian 12 (Bookworm)
 
-The following packages must be installed:
+The following packages must be installed on Debian:
 ```
-apt-get install build-essential gcc-aarch64-linux-gnu flex bison libssl1.0-dev python2.7-dev python-minimal swig device-tree-compiler
+apt install build-essential gcc-aarch64-linux-gnu flex bison libssl-dev python3 swig device-tree-compiler
 ```
 
 #### arm-trusted-firmware
