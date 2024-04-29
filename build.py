@@ -5,11 +5,16 @@
 #
 
 from pick import pick
-import os
+import os, subprocess
+import psutil
 
 title = 'Choose your building variant linux kernel for Orange Pi 3: '
 options = ['U-boot without eMMC', 'U-boot with eMMC']
 option, index = pick(options, title, indicator='=>', default_index=0)
+
+title = 'Choose destination disk for create image: '
+devices = subprocess.getoutput('lsblk -o NAME -nl').splitlines()
+option_sdcard, index_sdcard = pick(devices, title, indicator='=>', default_index=0)
 
 # install packages
 print('[INFO] Installing packages...')
@@ -45,7 +50,18 @@ else:
 	os.system('cp ../configs/u-boot-el1-hyp-config .config')
 	
 os.system('CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 make -j$(nproc --all)')
+os.system('dd if=u-boot-sunxi-with-spl.bin of={0} bs=1024 seek=8'.format(option_sdcard))
 os.chdir('..')
 
+# compiling linux kernel
+os.system('cp configs/linux-5.7.4-config linux-5.7.4/.config')
+os.system('make -j$(nproc --all) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs modules')
+os.system('make -j$(nproc --all) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-')
+os.system('make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output modules_install')
+os.system('make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output headers_install INSTALL_HDR_PATH=output/usr')
 
-	
+# copying binaries
+os.system('cp -R linux-5.7.4/arch/arm64/boot/Image /media/debian/armbi_root/boot/')
+os.system('cp -R linux-5.7.4/arch/arm64/boot/dts/* /media/debian/armbi_root/boot/dtbs/')
+os.system('cp -R linux-5.7.4/output/lib/ /media/debian/armbi_root/usr/')
+os.system('cp -R linux-5.7.4/output/usr/ /media/debian/armbi_root/')
