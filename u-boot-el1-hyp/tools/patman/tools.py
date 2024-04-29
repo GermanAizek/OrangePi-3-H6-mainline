@@ -3,13 +3,13 @@
 # Copyright (c) 2016 Google, Inc
 #
 
-import command
+from . import command
 import glob
 import os
 import shutil
 import tempfile
 
-import tout
+from . import tout
 
 # Output directly (generally this is temporary)
 outdir = None

@@ -85,13 +85,13 @@ def RunTests(debug, processes, args):
     else:
         suite.run(result)
 
-    print result
+    print(result)
     for test, err in result.errors:
-        print test.id(), err
+        print(test.id(), err)
     for test, err in result.failures:
-        print err, result.failures
+        print(err, result.failures)
     if result.errors or result.failures:
-      print 'binman tests FAILED'
+      print('binman tests FAILED')
       return 1
     return 0
 
@@ -143,9 +143,9 @@ def RunBinman(options, args):
         try:
             ret_code = control.Binman(options, args)
         except Exception as e:
-            print 'binman: %s' % e
+            print('binman: %s' % e)
             if options.debug:
-                print
+                print()
                 traceback.print_exc()
             ret_code = 1
     return ret_code

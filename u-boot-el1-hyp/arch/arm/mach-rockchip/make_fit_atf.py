@@ -180,17 +180,17 @@ def get_bl31_segments_info(bl31_file_name):
         bl31 = ELFFile(bl31_file)
 
         num = bl31.num_segments()
-        print('Number of Segments : %d' % bl31.num_segments())
+        print(('Number of Segments : %d' % bl31.num_segments()))
         for i in range(num):
-            print('Segment %d' % i)
+            print(('Segment %d' % i))
             seg = bl31.get_segment(i)
             ptype = seg[ELF_SEG_P_TYPE]
             poffset = seg[ELF_SEG_P_OFFSET]
             pmemsz = seg[ELF_SEG_P_MEMSZ]
             pfilesz = seg[ELF_SEG_P_FILESZ]
-            print('type: %s\nfilesz: %08x\nmemsz: %08x\noffset: %08x' % (ptype, pfilesz, pmemsz, poffset))
+            print(('type: %s\nfilesz: %08x\nmemsz: %08x\noffset: %08x' % (ptype, pfilesz, pmemsz, poffset)))
             paddr = seg[ELF_SEG_P_PADDR]
-            print('paddr: %08x' % paddr)
+            print(('paddr: %08x' % paddr))
 
 def main():
     uboot_elf="./u-boot"

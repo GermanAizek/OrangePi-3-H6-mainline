@@ -21,7 +21,7 @@ from libfdt import QUIET_NOTFOUND
 # so it is fairly efficient.
 
 # A list of types we support
-(TYPE_BYTE, TYPE_INT, TYPE_STRING, TYPE_BOOL, TYPE_INT64) = range(5)
+(TYPE_BYTE, TYPE_INT, TYPE_STRING, TYPE_BOOL, TYPE_INT64) = list(range(5))
 
 def CheckErr(errnum, msg):
     if errnum:
@@ -449,7 +449,7 @@ class Node:
         # Sync properties now, whose offsets should not have been disturbed.
         # We do this after subnodes, since this disturbs the offsets of these
         # properties.
-        prop_list = sorted(self.props.values(), key=lambda prop: prop._offset,
+        prop_list = sorted(list(self.props.values()), key=lambda prop: prop._offset,
                            reverse=True)
         for prop in prop_list:
             prop.Sync(auto_resize)

@@ -54,7 +54,7 @@ def pytest_configure(config):
 
     supported_fs = config.getoption('fs_type')
     if supported_fs:
-        print('*** FS TYPE modified: %s' % supported_fs)
+        print(('*** FS TYPE modified: %s' % supported_fs))
         supported_fs_basic =  intersect(supported_fs, supported_fs_basic)
         supported_fs_ext =  intersect(supported_fs, supported_fs_ext)
         supported_fs_mkdir =  intersect(supported_fs, supported_fs_mkdir)

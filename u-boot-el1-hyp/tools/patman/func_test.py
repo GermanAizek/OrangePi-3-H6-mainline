@@ -12,15 +12,15 @@ import sys
 import tempfile
 import unittest
 
-import gitutil
-import patchstream
-import settings
+from . import gitutil
+from . import patchstream
+from . import settings
 
 
 @contextlib.contextmanager
 def capture():
     import sys
-    from cStringIO import StringIO
+    from io import StringIO
     oldout,olderr = sys.stdout, sys.stderr
     try:
         out=[StringIO(), StringIO()]
@@ -124,10 +124,10 @@ class TestFunctional(unittest.TestCase):
         """
         process_tags = True
         ignore_bad_tags = True
-        stefan = u'Stefan Brüns <stefan.bruens@rwth-aachen.de>'
+        stefan = 'Stefan Brüns <stefan.bruens@rwth-aachen.de>'
         rick = 'Richard III <richard@palace.gov>'
-        mel = u'Lord Mëlchett <clergy@palace.gov>'
-        ed = u'Lond Edmund Blackaddër <weasel@blackadder.org'
+        mel = 'Lord Mëlchett <clergy@palace.gov>'
+        ed = 'Lond Edmund Blackaddër <weasel@blackadder.org'
         fred = 'Fred Bloggs <f.bloggs@napier.net>'
         add_maintainers = [stefan, rick]
         dry_run = True

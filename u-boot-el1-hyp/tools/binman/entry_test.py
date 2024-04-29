@@ -12,6 +12,7 @@ import unittest
 import fdt
 import fdt_util
 import tools
+import importlib
 
 entry = None
 
@@ -41,7 +42,7 @@ class TestEntry(unittest.TestCase):
         del sys.modules['importlib']
         global entry
         if entry:
-            reload(entry)
+            importlib.reload(entry)
         else:
             import entry
         entry.Entry.Create(None, self.GetNode(), 'u-boot-spl')

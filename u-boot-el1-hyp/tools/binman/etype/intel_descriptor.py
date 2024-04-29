@@ -15,7 +15,7 @@ MAX_REGIONS    = 5
 
 # Region numbers supported by the Intel firmware format
 (REGION_DESCRIPTOR, REGION_BIOS, REGION_ME, REGION_GBE,
-        REGION_PDATA) = range(5)
+        REGION_PDATA) = list(range(5))
 
 class Region:
     def __init__(self, data, frba, region_num):

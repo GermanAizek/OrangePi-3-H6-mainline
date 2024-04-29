@@ -356,14 +356,14 @@ class DtbPlatdata(object):
             fields = {}
 
             # Get a list of all the valid properties in this node.
-            for name, prop in node.props.items():
+            for name, prop in list(node.props.items()):
                 if name not in PROP_IGNORE_LIST and name[0] != '#':
                     fields[name] = copy.deepcopy(prop)
 
             # If we've seen this node_name before, update the existing struct.
             if node_name in structs:
                 struct = structs[node_name]
-                for name, prop in fields.items():
+                for name, prop in list(fields.items()):
                     oldprop = struct.get(name)
                     if oldprop:
                         oldprop.Widen(prop)
@@ -378,7 +378,7 @@ class DtbPlatdata(object):
         for node in self._valid_nodes:
             node_name, _ = get_compat_name(node)
             struct = structs[node_name]
-            for name, prop in node.props.items():
+            for name, prop in list(node.props.items()):
                 if name not in PROP_IGNORE_LIST and name[0] != '#':
                     prop.Widen(struct[name])
             upto += 1
@@ -402,7 +402,7 @@ class DtbPlatdata(object):
         """
         for node in self._valid_nodes:
             node.phandles = set()
-            for pname, prop in node.props.items():
+            for pname, prop in list(node.props.items()):
                 if pname in PROP_IGNORE_LIST or pname[0] == '#':
                     continue
                 info = self.get_phandle_argc(prop, node.name)
@@ -449,7 +449,7 @@ class DtbPlatdata(object):
                 self.out(';\n')
             self.out('};\n')
 
-        for alias, struct_name in self._aliases.iteritems():
+        for alias, struct_name in self._aliases.items():
             self.out('#define %s%s %s%s\n'% (STRUCT_PREFIX, alias,
                                              STRUCT_PREFIX, struct_name))
 
@@ -463,7 +463,7 @@ class DtbPlatdata(object):
         var_name = conv_name_to_c(node.name)
         self.buf('static const struct %s%s %s%s = {\n' %
                  (STRUCT_PREFIX, struct_name, VAL_PREFIX, var_name))
-        for pname, prop in node.props.items():
+        for pname, prop in list(node.props.items()):
             if pname in PROP_IGNORE_LIST or pname[0] == '#':
                 continue
             member_name = conv_name_to_c(prop.name)
@@ -497,7 +497,7 @@ class DtbPlatdata(object):
                         vals.append(get_value(prop.type, val))
 
                     # Put 8 values per line to avoid very long lines.
-                    for i in xrange(0, len(vals), 8):
+                    for i in range(0, len(vals), 8):
                         if i:
                             self.buf(',\n\t\t')
                         self.buf(', '.join(vals[i:i + 8]))

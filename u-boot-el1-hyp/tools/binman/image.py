@@ -5,7 +5,7 @@
 # Class for an image, the output of binman
 #
 
-from __future__ import print_function
+
 
 from collections import OrderedDict
 from operator import attrgetter

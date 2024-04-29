@@ -3473,7 +3473,7 @@ def _internal_error(msg):
  T_BOOL, T_TRISTATE, T_HEX, T_INT, T_STRING,
  T_DEF_BOOL, T_DEF_TRISTATE,
  T_SELECT, T_IMPLY, T_RANGE, T_OPTION, T_ALLNOCONFIG_Y, T_ENV,
- T_DEFCONFIG_LIST, T_MODULES, T_VISIBLE) = range(40)
+ T_DEFCONFIG_LIST, T_MODULES, T_VISIBLE) = list(range(40))
 
 # The leading underscore before the function assignments below prevent pydoc
 # from listing them. The constants could be hidden too, but they're fairly
@@ -3515,7 +3515,7 @@ _id_keyword_re_match = re.compile(r"\s*([\w./-]+)\s*").match
 _sym_ref_re_search = re.compile(r"\$[A-Za-z0-9_]+").search
 
 # Integers representing symbol types
-UNKNOWN, BOOL, TRISTATE, STRING, HEX, INT = range(6)
+UNKNOWN, BOOL, TRISTATE, STRING, HEX, INT = list(range(6))
 
 # Strings to use for types
 TYPENAME = {UNKNOWN: "unknown", BOOL: "bool", TRISTATE: "tristate",
@@ -3533,7 +3533,7 @@ DEFAULT_VALUE = {BOOL: "n", TRISTATE: "n", STRING: "", INT: "", HEX: ""}
 NO_SELECTION = 0
 
 # Integers representing expression types
-AND, OR, NOT, EQUAL, UNEQUAL = range(5)
+AND, OR, NOT, EQUAL, UNEQUAL = list(range(5))
 
 # Map from tristate values to integers
 TRI_TO_INT = {"n": 0, "m": 1, "y": 2}

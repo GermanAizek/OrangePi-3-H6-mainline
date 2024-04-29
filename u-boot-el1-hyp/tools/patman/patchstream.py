@@ -8,10 +8,10 @@ import re
 import shutil
 import tempfile
 
-import command
-import commit
-import gitutil
-from series import Series
+from . import command
+from . import commit
+from . import gitutil
+from .series import Series
 
 # Tags that we detect and remove
 re_remove = re.compile('^BUG=|^TEST=|^BRANCH=|^Change-Id:|^Review URL:'
@@ -483,12 +483,12 @@ def FixPatches(series, fnames):
         commit.patch = fname
         result = FixPatch(backup_dir, fname, series, commit)
         if result:
-            print('%d warnings for %s:' % (len(result), fname))
+            print(('%d warnings for %s:' % (len(result), fname)))
             for warn in result:
-                print('\t', warn)
-            print
+                print(('\t', warn))
+            print()
         count += 1
-    print('Cleaned %d patches' % count)
+    print(('Cleaned %d patches' % count))
 
 def InsertCoverLetter(fname, series, count):
     """Inserts a cover letter with the required info into patch 0

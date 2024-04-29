@@ -138,7 +138,7 @@ def Prepare(images, dtb):
     fdt_files['u-boot.dtb'] = dtb
     fdt_subset = Set()
     if not use_fake_dtb:
-        for image in images.values():
+        for image in list(images.values()):
             fdt_subset.update(image.GetFdtSet())
         fdt_subset.discard('u-boot.dtb')
         for other_fname in fdt_subset:
@@ -175,7 +175,7 @@ def GetUpdateNodes(node):
             is node, SPL and TPL)
     """
     yield node
-    for dtb in fdt_files.values():
+    for dtb in list(fdt_files.values()):
         if dtb != node.GetFdt():
             other_node = dtb.GetNode(node.path)
             if other_node:

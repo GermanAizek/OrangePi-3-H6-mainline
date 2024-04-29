@@ -14,17 +14,17 @@ import unittest
 
 # Our modules
 try:
-    from patman import checkpatch, command, gitutil, patchstream, \
+    from .patman import checkpatch, command, gitutil, patchstream, \
         project, settings, terminal, test
 except ImportError:
-    import checkpatch
-    import command
-    import gitutil
-    import patchstream
-    import project
-    import settings
-    import terminal
-    import test
+    from . import checkpatch
+    from . import command
+    from . import gitutil
+    from . import patchstream
+    from . import project
+    from . import settings
+    from . import terminal
+    from . import test
 
 
 parser = OptionParser()
@@ -85,7 +85,7 @@ if __name__ != "__main__":
 # Run our meagre tests
 elif options.test:
     import doctest
-    import func_test
+    from . import func_test
 
     sys.argv = [sys.argv[0]]
     result = unittest.TestResult()
@@ -172,12 +172,12 @@ else:
                 in_reply_to=options.in_reply_to, thread=options.thread,
                 smtp_server=options.smtp_server)
     else:
-        print(col.Color(col.RED, "Not sending emails due to errors/warnings"))
+        print((col.Color(col.RED, "Not sending emails due to errors/warnings")))
 
     # For a dry run, just show our actions as a sanity check
     if options.dry_run:
         series.ShowActions(args, cmd, options.process_tags)
         if not its_a_go:
-            print(col.Color(col.RED, "Email would not be sent"))
+            print((col.Color(col.RED, "Email would not be sent")))
 
     os.remove(cc_file)

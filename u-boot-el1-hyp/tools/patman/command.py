@@ -3,7 +3,7 @@
 #
 
 import os
-import cros_subprocess
+from . import cros_subprocess
 
 """Shell command ease-ups for Python."""
 

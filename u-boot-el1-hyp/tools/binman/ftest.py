@@ -211,7 +211,7 @@ class TestFunctional(unittest.TestCase):
         if not use_real_dtb:
             args.append('--fake-dtb')
         if entry_args:
-            for arg, value in entry_args.iteritems():
+            for arg, value in entry_args.items():
                 args.append('-a%s=%s' % (arg, value))
         if images:
             for image in images:
@@ -402,7 +402,7 @@ class TestFunctional(unittest.TestCase):
             entries: List of entries to check
         """
         offset = 0
-        for entry in entries.values():
+        for entry in list(entries.values()):
             self.assertEqual(offset, entry.offset)
             offset += entry.size
 
@@ -422,7 +422,7 @@ class TestFunctional(unittest.TestCase):
             if node.name != '/':
                 path += '/' + node.name
             for subnode in node.subnodes:
-                for prop in subnode.props.values():
+                for prop in list(subnode.props.values()):
                     if prop.name in prop_names:
                         prop_path = path + '/' + subnode.name + ':' + prop.name
                         tree[prop_path[len('/binman/'):]] = fdt_util.fdt32_to_cpu(
@@ -1561,7 +1561,7 @@ class TestFunctional(unittest.TestCase):
         dtb.Scan()
         props = self._GetPropTree(dtb, ['size', 'uncomp-size'])
         orig = self._decompress(data)
-        self.assertEquals(COMPRESS_DATA, orig)
+        self.assertEqual(COMPRESS_DATA, orig)
         expected = {
             'blob:uncomp-size': len(COMPRESS_DATA),
             'blob:size': len(data),

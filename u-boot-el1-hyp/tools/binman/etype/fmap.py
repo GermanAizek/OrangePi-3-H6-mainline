@@ -39,7 +39,7 @@ class Entry_fmap(Entry):
         def _AddEntries(areas, entry):
             entries = entry.GetEntries()
             if entries:
-                for subentry in entries.values():
+                for subentry in list(entries.values()):
                     _AddEntries(areas, subentry)
             else:
                 pos = entry.image_pos
@@ -50,7 +50,7 @@ class Entry_fmap(Entry):
 
         entries = self.section._image.GetEntries()
         areas = []
-        for entry in entries.values():
+        for entry in list(entries.values()):
             _AddEntries(areas, entry)
         return fmap_util.EncodeFmap(self.section.GetImageSize() or 0, self.name,
                                     areas)

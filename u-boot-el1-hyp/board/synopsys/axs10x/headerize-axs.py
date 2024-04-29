@@ -8,11 +8,11 @@ from elftools.elf.elffile import ELFFile
 def usage(exit_code):
     print("typical usage:")
     print("AXS101:")
-    print(sys.argv[0] + \
-        " --header-type v1 --arc-id 0x434 --spi-flash-offset 0x0 --image u-boot.bin --elf u-boot")
+    print((sys.argv[0] + \
+        " --header-type v1 --arc-id 0x434 --spi-flash-offset 0x0 --image u-boot.bin --elf u-boot"))
     print("AXS103:")
-    print(sys.argv[0] + \
-        " --header-type v2 --arc-id 0x53 --spi-flash-offset 0x200000 --image u-boot.bin --elf u-boot")
+    print((sys.argv[0] + \
+        " --header-type v2 --arc-id 0x53 --spi-flash-offset 0x200000 --image u-boot.bin --elf u-boot"))
     sys.exit(exit_code)
 
 
@@ -31,15 +31,15 @@ def calc_check_sum(filename):
 
 def arg_verify(uboot_bin_filename, uboot_elf_filename, header_type):
     if not os.path.isfile(uboot_bin_filename):
-        print("uboot bin file not exists: " + uboot_bin_filename)
+        print(("uboot bin file not exists: " + uboot_bin_filename))
         sys.exit(2)
 
     if not os.path.isfile(uboot_elf_filename):
-        print("uboot elf file not exists: " + uboot_elf_filename)
+        print(("uboot elf file not exists: " + uboot_elf_filename))
         sys.exit(2)
 
     if header_type not in ("v1", "v2"):
-        print("unknown header type: " + header_type)
+        print(("unknown header type: " + header_type))
         print("choose between 'v1' (most likely AXS101) and 'v2' (most likely AXS103)")
         sys.exit(2)
 

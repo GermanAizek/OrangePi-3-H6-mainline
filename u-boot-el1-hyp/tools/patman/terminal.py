@@ -7,13 +7,13 @@
 This module handles terminal interaction including ANSI color codes.
 """
 
-from __future__ import print_function
+
 
 import os
 import sys
 
 # Selection of when we want our output to be colored
-COLOR_IF_TERMINAL, COLOR_ALWAYS, COLOR_NEVER = range(3)
+COLOR_IF_TERMINAL, COLOR_ALWAYS, COLOR_NEVER = list(range(3))
 
 # Initially, we are set up to print to the terminal
 print_test_mode = False
@@ -91,7 +91,7 @@ def EchoPrintTestLines():
 
 class Color(object):
     """Conditionally wraps text in ANSI color escape sequences."""
-    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = list(range(8))
     BOLD = -1
     BRIGHT_START = '\033[1;%dm'
     NORMAL_START = '\033[22;%dm'

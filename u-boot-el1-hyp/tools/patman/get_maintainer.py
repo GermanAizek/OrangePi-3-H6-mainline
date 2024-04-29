@@ -2,8 +2,8 @@
 # Copyright (c) 2012 The Chromium OS Authors.
 #
 
-import command
-import gitutil
+from . import command
+from . import gitutil
 import os
 
 def FindGetMaintainer():

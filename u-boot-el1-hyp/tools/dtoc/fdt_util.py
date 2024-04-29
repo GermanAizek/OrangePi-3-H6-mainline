@@ -49,7 +49,7 @@ def fdt_cells_to_cpu(val, cells):
     """
     if not cells:
         return 0
-    out = long(fdt32_to_cpu(val[0]))
+    out = int(fdt32_to_cpu(val[0]))
     if cells == 2:
         out = out << 32 | fdt32_to_cpu(val[1])
     return out

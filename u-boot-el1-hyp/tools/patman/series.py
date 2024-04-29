@@ -2,15 +2,15 @@
 # Copyright (c) 2011 The Chromium OS Authors.
 #
 
-from __future__ import print_function
+
 
 import itertools
 import os
 
-import get_maintainer
-import gitutil
-import settings
-import terminal
+from . import get_maintainer
+from . import gitutil
+from . import settings
+from . import terminal
 
 # Series-xxx tags that we understand
 valid_series = ['to', 'cc', 'version', 'changes', 'prefix', 'notes', 'name',
@@ -120,7 +120,7 @@ class Series(dict):
                             % tag)
                 if email:
                     print('      Cc: ', email)
-        print
+        print()
         for item in to_set:
             print('To:\t ', item)
         for item in cc_set - to_set:
@@ -130,7 +130,7 @@ class Series(dict):
         if self.cover:
             print('Cover: %d lines' % len(self.cover))
             cover_cc = gitutil.BuildEmailList(self.get('cover_cc', ''))
-            all_ccs = itertools.chain(cover_cc, *self._generated_cc.values())
+            all_ccs = itertools.chain(cover_cc, *list(self._generated_cc.values()))
             for email in set(all_ccs) - to_set - cc_set:
                     print('      Cc: ', email)
         if cmd:

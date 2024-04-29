@@ -6,7 +6,7 @@
 
 import sys
 
-import terminal
+from . import terminal
 
 # Output verbosity levels that we support
 ERROR = 0

@@ -129,12 +129,12 @@ def Binman(options, args):
 
             if options.image:
                 skip = []
-                for name, image in images.iteritems():
+                for name, image in images.items():
                     if name not in options.image:
                         del images[name]
                         skip.append(name)
                 if skip:
-                    print 'Skipping images: %s\n' % ', '.join(skip)
+                    print('Skipping images: %s\n' % ', '.join(skip))
 
             state.Prepare(images, dtb)
 
@@ -145,7 +145,7 @@ def Binman(options, args):
             # SetCalculatedProperties() we will insert the correct values
             # without changing the device-tree size, thus ensuring that our
             # entry offsets remain the same.
-            for image in images.values():
+            for image in list(images.values()):
                 image.ExpandEntries()
                 if options.update_fdt:
                     image.AddMissingProperties()
@@ -156,7 +156,7 @@ def Binman(options, args):
                 dtb_item.Pack()
                 dtb_item.Flush()
 
-            for image in images.values():
+            for image in list(images.values()):
                 # Perform all steps for this image, including checking and
                 # writing it. This means that errors found with a later
                 # image will be reported after earlier images are already
@@ -170,7 +170,7 @@ def Binman(options, args):
                 except Exception as e:
                     if options.map:
                         fname = image.WriteMap()
-                        print "Wrote map file '%s' to show errors"  % fname
+                        print("Wrote map file '%s' to show errors"  % fname)
                     raise
                 image.SetImagePos()
                 if options.update_fdt:

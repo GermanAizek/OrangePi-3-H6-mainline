@@ -9,7 +9,7 @@ from elftools.elf.elffile import ELFFile
 
 def usage(exit_code):
     print("usage:")
-    print(sys.argv[0] + " --arc-id 0x52 --image u-boot.bin --elf u-boot")
+    print((sys.argv[0] + " --arc-id 0x52 --image u-boot.bin --elf u-boot"))
     sys.exit(exit_code)
 
 
@@ -28,15 +28,15 @@ def calc_check_sum(filename):
 
 def arg_verify(uboot_bin_filename, uboot_elf_filename, arc_id):
     if arc_id not in [0x52, 0x53]:
-        print("unknown ARC ID: " + hex(arc_id))
+        print(("unknown ARC ID: " + hex(arc_id)))
         sys.exit(2)
 
     if not os.path.isfile(uboot_bin_filename):
-        print("uboot bin file not exists: " + uboot_bin_filename)
+        print(("uboot bin file not exists: " + uboot_bin_filename))
         sys.exit(2)
 
     if not os.path.isfile(uboot_elf_filename):
-        print("uboot elf file not exists: " + uboot_elf_filename)
+        print(("uboot elf file not exists: " + uboot_elf_filename))
         sys.exit(2)
 
 

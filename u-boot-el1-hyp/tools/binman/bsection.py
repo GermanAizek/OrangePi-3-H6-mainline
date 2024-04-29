@@ -5,7 +5,7 @@
 # Base class for sections (collections of entries)
 #
 
-from __future__ import print_function
+
 
 from collections import OrderedDict
 from sets import Set
@@ -109,7 +109,7 @@ class Section(object):
     def GetFdtSet(self):
         """Get the set of device tree files used by this image"""
         fdt_set = Set()
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             fdt_set.update(entry.GetFdtSet())
         return fdt_set
 
@@ -117,7 +117,7 @@ class Section(object):
         self._offset = offset
 
     def ExpandEntries(self):
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.ExpandEntries()
 
     def AddMissingProperties(self):
@@ -126,7 +126,7 @@ class Section(object):
             if not prop in self._node.props:
                 state.AddZeroProp(self._node, prop)
         state.CheckAddHashProp(self._node)
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.AddMissingProperties()
 
     def SetCalculatedProperties(self):
@@ -136,11 +136,11 @@ class Section(object):
         if self._parent_section:
             image_pos -= self._parent_section.GetRootSkipAtStart()
         state.SetInt(self._node, 'image-pos', image_pos)
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.SetCalculatedProperties()
 
     def ProcessFdt(self, fdt):
-        todo = self._entries.values()
+        todo = list(self._entries.values())
         for passnum in range(3):
             next_todo = []
             for entry in todo:
@@ -157,7 +157,7 @@ class Section(object):
     def CheckSize(self):
         """Check that the section contents does not exceed its size, etc."""
         contents_size = 0
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             contents_size = max(contents_size, entry.offset + entry.size)
 
         contents_size -= self._skip_at_start
@@ -203,7 +203,7 @@ class Section(object):
         Returns:
             entry matching that type, or None if not found
         """
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             if entry.etype == etype:
                 return entry
         return None
@@ -217,7 +217,7 @@ class Section(object):
 
         After 3 rounds we give up since it's likely an error.
         """
-        todo = self._entries.values()
+        todo = list(self._entries.values())
         for passnum in range(3):
             next_todo = []
             for entry in todo:
@@ -251,21 +251,21 @@ class Section(object):
         This calls each entry's GetOffsets() method. If it returns a list
         of entries to update, it updates them.
         """
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             offset_dict = entry.GetOffsets()
-            for name, info in offset_dict.iteritems():
+            for name, info in offset_dict.items():
                 self._SetEntryOffsetSize(name, *info)
 
     def PackEntries(self):
         """Pack all entries into the section"""
         offset = self._skip_at_start
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             offset = entry.Pack(offset)
         self._size = self.CheckSize()
 
     def _SortEntries(self):
         """Sort entries by offset"""
-        entries = sorted(self._entries.values(), key=lambda entry: entry.offset)
+        entries = sorted(list(self._entries.values()), key=lambda entry: entry.offset)
         self._entries.clear()
         for entry in entries:
             self._entries[entry._node.name] = entry
@@ -273,7 +273,7 @@ class Section(object):
     def _ExpandEntries(self):
         """Expand any entries that are permitted to"""
         exp_entry = None
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             if exp_entry:
                 exp_entry.ExpandToLimit(entry.offset)
                 exp_entry = None
@@ -292,7 +292,7 @@ class Section(object):
         self._ExpandEntries()
         offset = 0
         prev_name = 'None'
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.CheckOffset()
             if (entry.offset < self._skip_at_start or
                 entry.offset + entry.size > self._skip_at_start + self._size):
@@ -309,7 +309,7 @@ class Section(object):
 
     def SetImagePos(self, image_pos):
         self._image_pos = image_pos
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.SetImagePos(image_pos)
 
     def ProcessEntryContents(self):
@@ -317,12 +317,12 @@ class Section(object):
 
         This is intended to adjust the contents as needed by the entry type.
         """
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.ProcessContents()
 
     def WriteSymbols(self):
         """Write symbol values into binary files for access at run time"""
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.WriteSymbols(self)
 
     def BuildSection(self, fd, base_offset):
@@ -334,7 +334,7 @@ class Section(object):
         """Get the contents of the section"""
         section_data = chr(self._pad_byte) * self._size
 
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             data = entry.GetData()
             base = self._pad_before + entry.offset - self._skip_at_start
             section_data = (section_data[:base] + data +
@@ -386,7 +386,7 @@ class Section(object):
                             entry = self._entries[name]
         if not entry:
             err = ("%s: Entry '%s' not found in list (%s)" %
-                   (msg, entry_name, ','.join(self._entries.keys())))
+                   (msg, entry_name, ','.join(list(self._entries.keys()))))
             if optional:
                 print('Warning: %s' % err, file=sys.stderr)
                 return None
@@ -426,7 +426,7 @@ class Section(object):
         """
         Entry.WriteMapLine(fd, indent, self._name, self._offset, self._size,
                            self._image_pos)
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             entry.WriteMap(fd, indent + 1)
 
     def GetContentsByPhandle(self, phandle, source_entry):
@@ -446,7 +446,7 @@ class Section(object):
         node = self._node.GetFdt().LookupPhandle(phandle)
         if not node:
             source_entry.Raise("Cannot find node for phandle %d" % phandle)
-        for entry in self._entries.values():
+        for entry in list(self._entries.values()):
             if entry._node == node:
                 return entry.GetData()
         source_entry.Raise("Cannot find entry for node '%s'" % node.name)

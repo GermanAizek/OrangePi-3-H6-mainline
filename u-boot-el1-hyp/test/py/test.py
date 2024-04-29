@@ -7,7 +7,7 @@
 # Wrapper script to invoke pytest with the directory name that contains the
 # U-Boot tests.
 
-from __future__ import print_function
+
 
 import os
 import os.path

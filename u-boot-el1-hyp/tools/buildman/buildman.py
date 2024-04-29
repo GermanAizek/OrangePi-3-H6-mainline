@@ -46,11 +46,11 @@ def RunTests(skip_net_tests):
         suite = unittest.TestLoader().loadTestsFromTestCase(module)
         suite.run(result)
 
-    print result
+    print(result)
     for test, err in result.errors:
-        print err
+        print(err)
     for test, err in result.failures:
-        print err
+        print(err)
 
 
 options, args = cmdline.ParseArgs()

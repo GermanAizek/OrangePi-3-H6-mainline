@@ -8,10 +8,10 @@ import os
 import tempfile
 import unittest
 
-import checkpatch
-import gitutil
-import patchstream
-import series
+from . import checkpatch
+from . import gitutil
+from . import patchstream
+from . import series
 
 
 class TestPatch(unittest.TestCase):

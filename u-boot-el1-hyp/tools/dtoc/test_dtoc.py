@@ -97,8 +97,8 @@ class TestDtoc(unittest.TestCase):
         if expected != actual:
             self._WritePythonString('/tmp/binman.expected', expected)
             self._WritePythonString('/tmp/binman.actual', actual)
-            print 'Failures written to /tmp/binman.{expected,actual}'
-        self.assertEquals(expected, actual)
+            print('Failures written to /tmp/binman.{expected,actual}')
+        self.assertEqual(expected, actual)
 
     def test_name(self):
         """Test conversion of device tree names to C identifiers"""

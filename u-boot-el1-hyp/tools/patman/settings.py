@@ -2,18 +2,18 @@
 # Copyright (c) 2011 The Chromium OS Authors.
 #
 
-from __future__ import print_function
+
 
 try:
     import configparser as ConfigParser
 except:
-    import ConfigParser
+    import configparser
 
 import os
 import re
 
-import command
-import gitutil
+from . import command
+from . import gitutil
 
 """Default settings per-project.
 
@@ -27,7 +27,7 @@ _default_settings = {
     }
 }
 
-class _ProjectConfigParser(ConfigParser.SafeConfigParser):
+class _ProjectConfigParser(configparser.SafeConfigParser):
     """ConfigParser that handles projects.
 
     There are two main goals of this class:
@@ -88,7 +88,7 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
             project_name: The name of the project.
         """
         self._project_name = project_name
-        ConfigParser.SafeConfigParser.__init__(self)
+        configparser.SafeConfigParser.__init__(self)
 
         # Update the project settings in the config based on
         # the _default_settings global.
@@ -96,7 +96,7 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
         if not self.has_section(project_settings):
             self.add_section(project_settings)
         project_defaults = _default_settings.get(project_name, {})
-        for setting_name, setting_value in project_defaults.items():
+        for setting_name, setting_value in list(project_defaults.items()):
             self.set(project_settings, setting_name, setting_value)
 
     def _to_unicode(self, val):
@@ -108,7 +108,7 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
         Returns:
             unicode version of val
         """
-        return val if isinstance(val, unicode) else val.decode('utf-8')
+        return val if isinstance(val, str) else val.decode('utf-8')
 
     def get(self, section, option, *args, **kwargs):
         """Extend SafeConfigParser to try project_section before section.
@@ -119,12 +119,12 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
             See SafeConfigParser.
         """
         try:
-            val = ConfigParser.SafeConfigParser.get(
+            val = configparser.SafeConfigParser.get(
                 self, "%s_%s" % (self._project_name, section), option,
                 *args, **kwargs
             )
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-            val = ConfigParser.SafeConfigParser.get(
+        except (configparser.NoSectionError, configparser.NoOptionError):
+            val = configparser.SafeConfigParser.get(
                 self, section, option, *args, **kwargs
             )
         return self._to_unicode(val)
@@ -143,19 +143,19 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
 
         # Get items from the project section
         try:
-            project_items = ConfigParser.SafeConfigParser.items(
+            project_items = configparser.SafeConfigParser.items(
                 self, "%s_%s" % (self._project_name, section), *args, **kwargs
             )
             has_project_section = True
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             pass
 
         # Get top-level items
         try:
-            top_items = ConfigParser.SafeConfigParser.items(
+            top_items = configparser.SafeConfigParser.items(
                 self, section, *args, **kwargs
             )
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             # If neither section exists raise the error on...
             if not has_project_section:
                 raise
@@ -163,7 +163,7 @@ class _ProjectConfigParser(ConfigParser.SafeConfigParser):
         item_dict = dict(top_items)
         item_dict.update(project_items)
         return {(self._to_unicode(item), self._to_unicode(val))
-                for item, val in item_dict.iteritems()}
+                for item, val in item_dict.items()}
 
 def ReadGitAliases(fname):
     """Read a git alias file. This is in the form used by git:
@@ -211,12 +211,12 @@ def CreatePatmanConfigFile(config_fname):
     """
     name = gitutil.GetDefaultUserName()
     if name == None:
-        name = raw_input("Enter name: ")
+        name = input("Enter name: ")
 
     email = gitutil.GetDefaultUserEmail()
 
     if email == None:
-        email = raw_input("Enter email: ")
+        email = input("Enter email: ")
 
     try:
         f = open(config_fname, 'w')
@@ -311,7 +311,7 @@ def GetItems(config, section):
     """
     try:
         return config.items(section)
-    except ConfigParser.NoSectionError as e:
+    except configparser.NoSectionError as e:
         return []
     except:
         raise
