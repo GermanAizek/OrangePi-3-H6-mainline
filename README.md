@@ -19,60 +19,14 @@ Mainline kernel Orange Pi 3 (Allwinner H6) with USB3, WiFi, Ethernet, PCI-E patc
 #### Build environment
 * Debian 12 (Bookworm)
 
-The following packages must be installed on Debian:
-```
-apt install build-essential gcc-aarch64-linux-gnu flex bison libssl-dev python3 swig rsync device-tree-compiler
-```
-
-#### arm-trusted-firmware
+#### building from sources
 
 ```bash
-make -j8 CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50i_h6 PRELOADED_BL33_BASE=0x40010000
-```
-#### aw-el2-barebone
-
-```bash
-make -j8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+sudo python ./build.py
 ```
 
-#### u-boot-el1-hyp-emmc
+**Copying to SD card is hardcoded in build.py, edit your media path**
 
-First copy to the u-boot directory the files `bl31.bin` from arm-trusted-firmware and `el2-bb.bin` from aw-el2-barebone and rename the latter to `hyp.bin`.
-```bash
-cp arm-trusted-firmware/build/sun50i_h6/release/bl31.bin u-boot-el1-hyp-emmc/bl31.bin
-cp aw-el2-barebone/el2-bb.bin u-boot-el1-hyp-emmc/hyp.bin
-cp configs/u-boot-el1-hyp-config u-boot-el1-hyp-emmc/.config
-make -j8 CROSS_COMPILE=aarch64-linux-gnu-
-```
-
-```bash
-dd if=u-boot-sunxi-with-spl.bin of=/dev/sdX bs=1024 seek=8
-```
-
-or SD card adapter on laptop
-
-```bash
-dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblkX bs=1024 seek=8
-```
-
-#### linux-5.7.4
-
-Compilation:
-```bash
-cp configs/linux-5.7.4-config linux-5.7.4/.config
-make -j8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs modules
-make -j8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output modules_install
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output headers_install INSTALL_HDR_PATH=output/usr
-```
-
-Copy to SD card:
-```bash
-cp -R linux-5.7.4/arch/arm64/boot/Image /media/ingamedeo/<UUID>/boot/
-cp -R linux-5.7.4/arch/arm64/boot/dts/* /media/ingamedeo/<UUID>/boot/dtbs/
-cp -R linux-5.7.4/output/lib/ /media/ingamedeo/<UUID>/usr/
-cp -R linux-5.7.4/output/usr/ /media/ingamedeo/<UUID>/
-```
 ### Booting from eMMC
 
 Before you follow these instructions you must have prepared the partition on the eMMC. Create a single partition and format it (mkfs.ext4 -O ^64bit /dev/mmcblk1p1).
