@@ -16,6 +16,9 @@ title = 'Choose destination disk for create image: '
 devices = subprocess.getoutput('lsblk -o NAME -nl').splitlines()
 option_sdcard, index_sdcard = pick(devices, title, indicator='=>', default_index=0)
 
+label_disk = 'armbi_root'
+user = subprocess.getoutput('whoami')
+
 # install packages
 print('[INFO] Installing packages...')
 os.system('sudo apt install build-essential gcc-aarch64-linux-gnu flex bison libssl-dev python3 swig rsync device-tree-compiler')
@@ -50,18 +53,33 @@ else:
 	os.system('cp ../configs/u-boot-el1-hyp-config .config')
 	
 os.system('CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 make -j$(nproc --all)')
-os.system('dd if=u-boot-sunxi-with-spl.bin of={0} bs=1024 seek=8'.format(option_sdcard))
+os.system('dd if=u-boot-sunxi-with-spl.bin of=/dev/{0} bs=1024 seek=8'.format(option_sdcard))
 os.chdir('..')
 
-# compiling linux kernel
-os.system('cp configs/linux-5.7.4-config linux-5.7.4/.config')
+# compiling linux kernel 5.7.4
+os.chdir('linux-5.7.4')
+os.system('cp ../configs/linux-5.7.4-config .config')
 os.system('make -j$(nproc --all) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs modules')
 os.system('make -j$(nproc --all) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-')
 os.system('make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output modules_install')
 os.system('make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=output headers_install INSTALL_HDR_PATH=output/usr')
+os.chdir('..')
 
 # copying binaries
-os.system('cp -R linux-5.7.4/arch/arm64/boot/Image /media/debian/armbi_root/boot/')
-os.system('cp -R linux-5.7.4/arch/arm64/boot/dts/* /media/debian/armbi_root/boot/dtbs/')
-os.system('cp -R linux-5.7.4/output/lib/ /media/debian/armbi_root/usr/')
-os.system('cp -R linux-5.7.4/output/usr/ /media/debian/armbi_root/')
+os.system('mkdir -p /media/{0}/{1}/boot/dtbs/'.format(user, label_disk))
+os.system('chmod 755 -R /media/{0}/{1}/boot/dtbs/'.format(user, label_disk))
+os.system('cp -R linux-5.7.4/arch/arm64/boot/Image /media/{0}/{1}/boot/'.format(user, label_disk))
+os.system('cp -R linux-5.7.4/arch/arm64/boot/dts/* /media/{0}/{1}/boot/dtbs/'.format(user, label_disk))
+os.system('cp -R linux-5.7.4/output/lib/ /media/{0}/{1}/usr/'.format(user, label_disk))
+os.system('cp -R linux-5.7.4/output/usr/ /media/{0}/{1}/'.format(user, label_disk))
+
+# rebuild initrd
+os.chdir('/media/{0}/{1}/'.format(user, label_disk))
+os.system('mount -t proc proc proc/')
+os.system('mount -t sysfs sysfs sys/')
+os.system('mount --bind /dev dev/')
+os.system('chroot /mnt/ /bin/bash')
+os.system('update-initramfs -u -k 5.7.4')
+
+# make image
+os.system('mkimage -C none -A arm -T script -d boot.cmd boot.scr')
