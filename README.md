@@ -1,5 +1,7 @@
-# orangepi3-h6-mainline
+# Orange Pi 3 H6 mainline
 Mainline kernel Orange Pi 3 (Allwinner H6) with USB3, WiFi, Ethernet, PCI-E patches. EL2 Hypervisor for quirky PCI-E controller.
+
+*Warning!* Its not tested on LTS version.
 
 ### Content
 * arm-trusted-firmware: ARM Trusted Firmware-A
